@@ -1,4 +1,4 @@
-package com.example.tenantmanagementsystemgroupa
+package com.example.tenantmanagementsystemgroupa.ui.dashboard
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
 import com.example.tenantmanagementsystemgroupa.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {

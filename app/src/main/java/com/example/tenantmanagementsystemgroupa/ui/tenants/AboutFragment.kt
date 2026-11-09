@@ -1,4 +1,4 @@
-package com.example.tenantmanagementsystemgroupa
+package com.example.tenantmanagementsystemgroupa.ui.tenants
 
 import android.os.Bundle
 import android.view.LayoutInflater
