@@ -7,15 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.tenantmanagementsystemgroupa.data.model.Tenant
-import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
 import com.example.tenantmanagementsystemgroupa.databinding.FragmentAddTenantBinding
+import com.example.tenantmanagementsystemgroupa.ui.viewmodel.TenantViewModel
 
 class AddTenantFragment : Fragment() {
 
     private var _binding: FragmentAddTenantBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: TenantViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,23 +39,16 @@ class AddTenantFragment : Fragment() {
         Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onViewCreated")
 
         binding.saveButton.setOnClickListener {
-            val name = binding.tenantNameEditText.text.toString().trim()
-            val phone = binding.phoneEditText.text.toString().trim()
-            val rent = binding.rentEditText.text.toString().trim()
+            val tenant = viewModel.addTenant(
+                binding.tenantNameEditText.text.toString(),
+                binding.phoneEditText.text.toString(),
+                binding.rentEditText.text.toString()
+            )
 
-            if (name.isEmpty() || phone.isEmpty() || rent.isEmpty()) {
+            if (tenant == null) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            if (phone.length < 10) {
-                binding.phoneEditText.error = "Enter a valid phone number"
-                return@setOnClickListener
-            }
-
-            val tenant = Tenant(name, phone, rent)
-
-            TenantRepository.addTenant(tenant)
 
             val action = AddTenantFragmentDirections
                 .actionAddTenantFragmentToViewTenantsFragment(tenant)
