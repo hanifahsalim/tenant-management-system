@@ -1,18 +1,23 @@
 package com.example.tenantmanagementsystemgroupa.ui.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
+import com.example.tenantmanagementsystemgroupa.data.local.TenantDatabase
 import com.example.tenantmanagementsystemgroupa.data.model.Tenant
 import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
+import kotlinx.coroutines.launch
 
-class TenantViewModel : ViewModel() {
+class TenantViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _tenants = MutableLiveData<List<Tenant>>(TenantRepository.tenants.toList())
+    private val repository = TenantRepository(
+        TenantDatabase.getDatabase(application).tenantDao()
+    )
 
-    val tenants: LiveData<List<Tenant>> = _tenants
+    val tenants: LiveData<List<Tenant>> = repository.allTenants
 
     val tenantCountText: LiveData<String> = tenants.map { list ->
         "Tenants\n${list.size}"
@@ -39,8 +44,9 @@ class TenantViewModel : ViewModel() {
 
         val tenant = Tenant(cleanName, cleanPhone, cleanRent)
 
-        TenantRepository.addTenant(tenant)
-        _tenants.value = TenantRepository.tenants.toList()
+        viewModelScope.launch {
+            repository.addTenant(tenant)
+        }
 
         return tenant
     }
