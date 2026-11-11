@@ -59,3 +59,9 @@ com.example.tenantmanagementsystemgroupa
 ## Release
 
 Version 1.0 with the signed APK is on the [Releases page](https://github.com/hanifahsalim/tenant-management-system/releases).
+
+## ViewModel design (Andrew)
+
+- TenantViewModel is in ui.viewmodel and is shared by the screens with activityViewModels().
+- It exposes the tenant list as LiveData and three transformed texts using map: tenantCountText, totalRentText and allTenantsText.
+- addTenant() trims and validates the input, and returns null when a field is empty.
